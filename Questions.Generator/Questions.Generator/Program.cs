@@ -18,6 +18,7 @@ namespace Questions.Generator
             var cultureInfo = new CultureInfo("ru-RU");
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
+
             // Creates and initializes the CultureInfo which uses the international sort.
             Console.WriteLine("Hello, it's Question Generator!");
 
@@ -65,7 +66,6 @@ namespace Questions.Generator
 
         private static void PrintTypesMenu()
         {
-            Console.Write("\r\n");
             bool showMenu = true;
             while (showMenu)
             {
@@ -75,7 +75,6 @@ namespace Questions.Generator
 
         private static void PrintCategoriesMenu()
         {
-            Console.Write("\r\n");
             bool showMenu = true;
             while (showMenu)
             {
@@ -85,7 +84,6 @@ namespace Questions.Generator
 
         private static void PrintMethodsMenu()
         {
-            Console.Write("\r\n");
             bool showMenu = true;
             while (showMenu)
             {
@@ -95,7 +93,6 @@ namespace Questions.Generator
 
         private static void PrintHelpMenu()
         {
-            Console.Write("\r\n");
             bool showMenu = true;
             while (showMenu)
             {
@@ -105,7 +102,7 @@ namespace Questions.Generator
 
         private static bool TypesMenu()
         {
-            Console.WriteLine("\r\nВыбери тип:");
+            Console.WriteLine("Выбери тип:");
             Console.WriteLine("1) О причине.");
             Console.WriteLine("2) О цели.");
             Console.WriteLine("3) О свойствах.");
