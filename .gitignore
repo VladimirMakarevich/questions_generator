@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Questions.Generator/.vs/Questions.Generator
+/Questions.Generator/Questions.Generator/bin/Debug/netcoreapp3.1
+/Questions.Generator/Questions.Generator/obj
