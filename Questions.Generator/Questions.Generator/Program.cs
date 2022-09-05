@@ -35,84 +35,26 @@ namespace Questions.Generator
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
 
             // Creates and initializes the CultureInfo which uses the international sort.
-            Console.WriteLine("Hello, it's Question Generator!");
+            Console.WriteLine("Привет, это генератор вопрос для системного мышления!\n");
 
+            PrintGenericMenu(MainMenu);
+        }
+
+        private static void PrintGenericMenu(Func<bool> menu)
+        {
             bool showMenu = true;
             while (showMenu)
             {
-                showMenu = MainMenu();
+                showMenu = menu();
             }
         }
-
-        private static bool MainMenu()
-        {
-            Console.WriteLine("Выбери способ:");
-            Console.WriteLine("1) По типам.");
-            Console.WriteLine("2) По категориям.");
-            Console.WriteLine("3) По методам.");
-            Console.WriteLine("4) Случайный вопрос.");
-            Console.WriteLine("5) Help.");
-            Console.WriteLine("6) Clear Console.");
-            Console.WriteLine("7) Exit.");
-            Console.Write("\r\nВыбранный вариант: ");
-
-            switch (Console.ReadLine())
-            {
-                case "1":
-                    PrintTypesMenu();
-                    return true;
-                case "2":
-                    PrintCategoriesMenu();
-                    return true;
-                case "3":
-                    PrintMethodsMenu();
-                    return true;
-                case "4":
-                    PrintRandomQuestion();
-                    return true;
-                case "5":
-                    PrintHelpMenu();
-                    return true;
-                case "6":
-                    ClearConsole();
-                    return true;
-                case "7":
-                    return false;
-                default:
-                    return true;
-            }
-        }
-
+        
         private static void PrintRandomQuestion()
         {
             bool showMenu = true;
             while (showMenu)
             {
                 showMenu = GenerateRandomQuestion(GetNextQuestion());
-            }
-        }
-
-        private static bool GenerateRandomQuestion(string question)
-        {
-            Console.WriteLine($"\r");
-            Console.WriteLine($"Вопрос: {question}?");
-            Console.WriteLine($"\r");
-            Console.WriteLine("1) Выбрать этот вопрос.");
-            Console.WriteLine("2) Сгенерировать следующий вопрос.");
-            Console.WriteLine("3) Выход в главное меню.");
-            Console.Write("\r\nВыбранный вариант: ");
-
-            switch (Console.ReadLine())
-            {
-                case "1":
-                    DisplayResult(CaptureInput(question), question);
-                    return true;
-                case "2":
-                    return true;
-                case "3":
-                    return false;
-                default:
-                    return true;
             }
         }
 
@@ -123,43 +65,70 @@ namespace Questions.Generator
 
             return Questions[index];
         }
-
-        private static void PrintTypesMenu()
+        
+        private static bool MainMenu()
         {
-            bool showMenu = true;
-            while (showMenu)
+            Console.WriteLine("Выбери способ:\n");
+            Console.WriteLine("1) По типам.");
+            Console.WriteLine("2) По категориям.");
+            Console.WriteLine("3) По методам.");
+            Console.WriteLine("4) Случайный вопрос.");
+            Console.WriteLine("5) Помощь.");
+            Console.WriteLine("9) Очистить Консоль.");
+            Console.WriteLine("0) Выход.");
+            Console.Write("\r\nВыбранный вариант: ");
+
+            switch (Console.ReadLine())
             {
-                showMenu = TypesMenu();
+                case "1":
+                    PrintGenericMenu(TypesMenu);
+                    return true;
+                case "2":
+                    PrintGenericMenu(CategoriesMenu);
+                    return true;
+                case "3":
+                    PrintGenericMenu(MethodsMenu);
+                    return true;
+                case "4":
+                    PrintRandomQuestion();
+                    return true;
+                case "5":
+                    PrintGenericMenu(HelpMenu);
+                    return true;
+                case "9":
+                    ClearConsole();
+                    return true;
+                case "0":
+                    return false;
+                default:
+                    return true;
             }
         }
 
-        private static void PrintCategoriesMenu()
+        private static bool GenerateRandomQuestion(string question)
         {
-            bool showMenu = true;
-            while (showMenu)
+            Console.WriteLine($"\r");
+            Console.WriteLine($"Вопрос: {question}?");
+            Console.WriteLine($"\r");
+            Console.WriteLine("1) Выбрать этот вопрос.");
+            Console.WriteLine("2) Сгенерировать следующий вопрос.");
+            Console.WriteLine("0) Выход в главное меню.");
+            Console.Write("\r\nВыбранный вариант: ");
+
+            switch (Console.ReadLine())
             {
-                showMenu = CategoriesMenu();
+                case "1":
+                    DisplayResult(CaptureInput(question), question);
+                    return true;
+                case "2":
+                    return true;
+                case "0":
+                    return false;
+                default:
+                    return true;
             }
         }
-
-        private static void PrintMethodsMenu()
-        {
-            bool showMenu = true;
-            while (showMenu)
-            {
-                showMenu = MethodsMenu();
-            }
-        }
-
-        private static void PrintHelpMenu()
-        {
-            bool showMenu = true;
-            while (showMenu)
-            {
-                showMenu = HelpMenu();
-            }
-        }
-
+        
         private static bool TypesMenu()
         {
             Console.WriteLine("Выберите о чем будет вопрос:");
@@ -168,7 +137,7 @@ namespace Questions.Generator
             Console.WriteLine("3) О свойствах.");
             Console.WriteLine("4) О способе.");
             Console.WriteLine("5) О сущости.");
-            Console.WriteLine("6) Выход в главное меню.");
+            Console.WriteLine("0) Выход в главное меню.");
             Console.Write("\r\nВыбранный вариант: ");
 
             switch (Console.ReadLine())
@@ -188,7 +157,7 @@ namespace Questions.Generator
                 case "5":
                     GenerateQuestion("Что");
                     return true;
-                case "6":
+                case "0":
                     return false;
                 default:
                     return true;
@@ -201,7 +170,7 @@ namespace Questions.Generator
             Console.WriteLine($"1) {v1}?");
             Console.WriteLine($"2) {v1}?");
             Console.WriteLine($"3) {v3}?");
-            Console.WriteLine($"4) Назад.");
+            Console.WriteLine($"0) Назад.");
             Console.Write("\r\nВыбранный вопрос: ");
 
             switch (Console.ReadLine())
@@ -215,7 +184,7 @@ namespace Questions.Generator
                 case "3":
                     GenerateQuestion(v3);
                     return;
-                case "4":
+                case "0":
                     return;
                 default:
                     return;
@@ -227,7 +196,7 @@ namespace Questions.Generator
             Console.WriteLine("Выберите вариант:");
             Console.WriteLine($"1) {v1}?");
             Console.WriteLine($"2) {v2}?");
-            Console.WriteLine($"3) Назад.");
+            Console.WriteLine($"0) Назад.");
             Console.Write("\r\nВыбранный вопрос: ");
 
             switch (Console.ReadLine())
@@ -238,7 +207,7 @@ namespace Questions.Generator
                 case "2":
                     GenerateQuestion(v2);
                     return;
-                case "3":
+                case "0":
                     return;
                 default:
                     return;
@@ -248,12 +217,12 @@ namespace Questions.Generator
         private static bool CategoriesMenu()
         {
             Console.WriteLine("Выбери категорию:");
-            Console.WriteLine("1) Выход в главное меню.");
+            Console.WriteLine("0) Выход в главное меню.");
             Console.Write("\r\nВыбранный вариант: ");
 
             switch (Console.ReadLine())
             {
-                case "1":
+                case "0":
                     return false;
                 default:
                     return true;
@@ -263,12 +232,12 @@ namespace Questions.Generator
         private static bool MethodsMenu()
         {
             Console.WriteLine("Выбери метод:");
-            Console.WriteLine("1) Выход в главное меню.");
+            Console.WriteLine("0) Выход в главное меню.");
             Console.Write("\r\nВыбранный вариант: ");
 
             switch (Console.ReadLine())
             {
-                case "1":
+                case "0":
                     return false;
                 default:
                     return true;
@@ -282,7 +251,7 @@ namespace Questions.Generator
             Console.WriteLine("2) Проблема XY.");
             Console.WriteLine("3) Что такое предмет вопрошания.");
             Console.WriteLine("4) Часто задоваемые вопросы.");
-            Console.WriteLine("5) Выход в главное меню.");
+            Console.WriteLine("0) Выход в главное меню.");
             Console.Write("\r\nВыбранный вариант: ");
 
             switch (Console.ReadLine())
@@ -299,7 +268,7 @@ namespace Questions.Generator
                 case "4":
                     Console.WriteLine("Тут будет 'Часто задоваемые вопросы'");
                     return true;
-                case "5":
+                case "0":
                     return false;
                 default:
                     return true;
@@ -320,6 +289,7 @@ namespace Questions.Generator
         {
             Console.WriteLine($"\n");
             Console.Write($"Введите текст к которому хотите задать вопрос: {question} ");
+            
             return Console.ReadLine();
         }
 
