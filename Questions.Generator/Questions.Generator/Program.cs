@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -8,7 +9,110 @@ namespace Questions.Generator
 {
     public class Program
     {
-        private static readonly string[] Questions = new List<string>()
+        public List<MenuModel> ListMenus { get; set; } = new List<MenuModel>()
+            {
+                new MenuModel()
+                {
+                    Key = "1",
+                    Title = "По типам",
+                    Type = MenuType.Classic,
+                    Menus = new List<MenuModel>()
+                    {
+                        new MenuModel()
+                        {
+                            Key = "1",
+                            Title = "О причине",
+                            Type = MenuType.Classic,
+                            Items = new List<MenuItemModel>()
+                            {
+                                new MenuItemModel()
+                                {
+                                    Key = "1",
+                                    Item = "Почему"
+                                }
+                            }
+                        },
+                        new MenuModel()
+                        {
+                            Key = "2",
+                            Title = "О цели",
+                            Type = MenuType.Classic,
+                            Items = new List<MenuItemModel>()
+                            {
+                                new MenuItemModel()
+                                {
+                                    Key = "1",
+                                    Item = "Зачем"
+                                },
+                                new MenuItemModel()
+                                {
+                                    Key = "2",
+                                    Item = "К чему"
+                                }
+                            }
+                        },
+                        new MenuModel()
+                        {
+                            Key = "3",
+                            Title = "О свойствах",
+                            Type = MenuType.Classic,
+                            Items = new List<MenuItemModel>()
+                            {
+                                new MenuItemModel()
+                                {
+                                    Key = "1",
+                                    Item = "Какой"
+                                },
+                                new MenuItemModel()
+                                {
+                                    Key = "2",
+                                    Item = "Какая"
+                                },
+                                new MenuItemModel()
+                                {
+                                    Key = "3",
+                                    Item = "Какое"
+                                }
+                            }
+                        },
+                        new MenuModel()
+                        {
+                            Key = "4",
+                            Title = "О способе",
+                            Type = MenuType.Classic,
+                            Items = new List<MenuItemModel>()
+                            {
+                                new MenuItemModel()
+                                {
+                                    Key = "1",
+                                    Item = "Как"
+                                },
+                                new MenuItemModel()
+                                {
+                                    Key = "2",
+                                    Item = "Каким образом"
+                                }
+                            }
+                        },
+                        new MenuModel()
+                        {
+                            Key = "5",
+                            Title = "О сущости",
+                            Type = MenuType.Classic,
+                            Items = new List<MenuItemModel>()
+                            {
+                                new MenuItemModel()
+                                {
+                                    Key = "1",
+                                    Item = "Что"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        
+        private static readonly string[] AllQuestions = new List<string>()
         {
             "Что",
             "Почему",
@@ -22,6 +126,11 @@ namespace Questions.Generator
             "Что"
         }.ToArray();
 
+        private static readonly string[] ReadingQuestions = new List<string>()
+        {
+            "Что я могу сделать лучше",
+        }.ToArray();
+        
         private static void Main(string[] args)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -36,7 +145,7 @@ namespace Questions.Generator
 
             // Creates and initializes the CultureInfo which uses the international sort.
             Console.WriteLine("Привет, это генератор вопрос для системного мышления!\n");
-
+            
             PrintGenericMenu(MainMenu);
         }
 
@@ -48,24 +157,29 @@ namespace Questions.Generator
                 showMenu = menu();
             }
         }
-        
+
+        private static bool ReadingMenu()
+        {
+            return GenerateRandomQuestion(GetNextQuestion(ReadingQuestions));
+        }
+
         private static void PrintRandomQuestion()
         {
             bool showMenu = true;
             while (showMenu)
             {
-                showMenu = GenerateRandomQuestion(GetNextQuestion());
+                showMenu = GenerateRandomQuestion(GetNextQuestion(AllQuestions));
             }
         }
 
-        private static string GetNextQuestion()
+        private static string GetNextQuestion(string[] questions)
         {
             var random = new Random();
-            var index = random.Next(0, Questions.Length);
+            var index = random.Next(0, questions.Length);
 
-            return Questions[index];
+            return questions[index];
         }
-        
+
         private static bool MainMenu()
         {
             Console.WriteLine("Выбери способ:\n");
@@ -73,8 +187,9 @@ namespace Questions.Generator
             Console.WriteLine("2) По категориям.");
             Console.WriteLine("3) По методам.");
             Console.WriteLine("4) Случайный вопрос.");
-            Console.WriteLine("5) Помощь.");
-            Console.WriteLine("9) Очистить Консоль.");
+            Console.WriteLine("5) Вопросы для чтения.");
+            Console.WriteLine("help) Помощь.");
+            Console.WriteLine("clear) Очистить Консоль.");
             Console.WriteLine("0) Выход.");
             Console.Write("\r\nВыбранный вариант: ");
 
@@ -93,9 +208,12 @@ namespace Questions.Generator
                     PrintRandomQuestion();
                     return true;
                 case "5":
+                    PrintGenericMenu(ReadingMenu);
+                    return true;
+                case "help":
                     PrintGenericMenu(HelpMenu);
                     return true;
-                case "9":
+                case "clear":
                     ClearConsole();
                     return true;
                 case "0":
@@ -111,7 +229,7 @@ namespace Questions.Generator
             Console.WriteLine($"Вопрос: {question}?");
             Console.WriteLine($"\r");
             Console.WriteLine("1) Выбрать этот вопрос.");
-            Console.WriteLine("2) Сгенерировать следующий вопрос.");
+            Console.WriteLine("2) Получить следующий вопрос.");
             Console.WriteLine("0) Выход в главное меню.");
             Console.Write("\r\nВыбранный вариант: ");
 
@@ -128,7 +246,7 @@ namespace Questions.Generator
                     return true;
             }
         }
-        
+
         private static bool TypesMenu()
         {
             Console.WriteLine("Выберите о чем будет вопрос:");
@@ -246,7 +364,7 @@ namespace Questions.Generator
 
         private static bool HelpMenu()
         {
-            Console.WriteLine("Выбери способ:");
+            Console.WriteLine("Выбери вариант:");
             Console.WriteLine("1) Проблема вопрошания.");
             Console.WriteLine("2) Проблема XY.");
             Console.WriteLine("3) Что такое предмет вопрошания.");
@@ -280,7 +398,7 @@ namespace Questions.Generator
             Console.Clear();
         }
 
-        private static void GenerateQuestion(string question)
+        public static void GenerateQuestion(string question)
         {
             DisplayResult(CaptureInput(question), question);
         }
@@ -289,7 +407,7 @@ namespace Questions.Generator
         {
             Console.WriteLine($"\n");
             Console.Write($"Введите текст к которому хотите задать вопрос: {question} ");
-            
+
             return Console.ReadLine();
         }
 

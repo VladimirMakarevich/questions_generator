@@ -1,0 +1,33 @@
+﻿{
+  "key": null,
+  "title": null,
+  "menus": [
+    {
+      "key": null,
+      "title": null,
+      "menus": null,
+      "type": 1,
+      "items": [
+        {
+          "key": null,
+          "item": null
+        },
+        {
+          "key": null,
+          "item": null
+        }
+      ]
+    }
+  ],
+  "type": 1,
+  "items": [
+    {
+      "key": null,
+      "item": null
+    },
+    {
+      "key": null,
+      "item": null
+    }
+  ]
+}
