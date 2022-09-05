@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Questions.Generator
 {
@@ -113,7 +116,30 @@ namespace Questions.Generator
                 }
             };
 
+            MenuModels = Read($"{AppDomain.CurrentDomain.BaseDirectory}data.json");
+
             PrintGenericMenu();
+        }
+
+        public static List<MenuModel> Read(string path)
+        {
+            using var file = new StreamReader(path);
+            try
+            {
+                string json = file.ReadToEnd();
+
+                var serializerSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+
+                return JsonConvert.DeserializeObject<List<MenuModel>>(json, serializerSettings);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Problem reading file: {ex}.");
+                return null;
+            }
         }
 
         private static void PrintGenericMenu()

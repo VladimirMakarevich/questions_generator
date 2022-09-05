@@ -9,109 +9,6 @@ namespace Questions.Generator
 {
     public class Program
     {
-        public List<MenuModel> ListMenus { get; set; } = new List<MenuModel>()
-            {
-                new MenuModel()
-                {
-                    Key = "1",
-                    Title = "По типам",
-                    Type = MenuType.Classic,
-                    Menus = new List<MenuModel>()
-                    {
-                        new MenuModel()
-                        {
-                            Key = "1",
-                            Title = "О причине",
-                            Type = MenuType.Classic,
-                            Items = new List<MenuItemModel>()
-                            {
-                                new MenuItemModel()
-                                {
-                                    Key = "1",
-                                    Item = "Почему"
-                                }
-                            }
-                        },
-                        new MenuModel()
-                        {
-                            Key = "2",
-                            Title = "О цели",
-                            Type = MenuType.Classic,
-                            Items = new List<MenuItemModel>()
-                            {
-                                new MenuItemModel()
-                                {
-                                    Key = "1",
-                                    Item = "Зачем"
-                                },
-                                new MenuItemModel()
-                                {
-                                    Key = "2",
-                                    Item = "К чему"
-                                }
-                            }
-                        },
-                        new MenuModel()
-                        {
-                            Key = "3",
-                            Title = "О свойствах",
-                            Type = MenuType.Classic,
-                            Items = new List<MenuItemModel>()
-                            {
-                                new MenuItemModel()
-                                {
-                                    Key = "1",
-                                    Item = "Какой"
-                                },
-                                new MenuItemModel()
-                                {
-                                    Key = "2",
-                                    Item = "Какая"
-                                },
-                                new MenuItemModel()
-                                {
-                                    Key = "3",
-                                    Item = "Какое"
-                                }
-                            }
-                        },
-                        new MenuModel()
-                        {
-                            Key = "4",
-                            Title = "О способе",
-                            Type = MenuType.Classic,
-                            Items = new List<MenuItemModel>()
-                            {
-                                new MenuItemModel()
-                                {
-                                    Key = "1",
-                                    Item = "Как"
-                                },
-                                new MenuItemModel()
-                                {
-                                    Key = "2",
-                                    Item = "Каким образом"
-                                }
-                            }
-                        },
-                        new MenuModel()
-                        {
-                            Key = "5",
-                            Title = "О сущости",
-                            Type = MenuType.Classic,
-                            Items = new List<MenuItemModel>()
-                            {
-                                new MenuItemModel()
-                                {
-                                    Key = "1",
-                                    Item = "Что"
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-        
         private static readonly string[] AllQuestions = new List<string>()
         {
             "Что",
@@ -145,8 +42,10 @@ namespace Questions.Generator
 
             // Creates and initializes the CultureInfo which uses the international sort.
             Console.WriteLine("Привет, это генератор вопрос для системного мышления!\n");
-            
-            PrintGenericMenu(MainMenu);
+
+            QuestionFactory.GenerateQuestions();
+
+            //PrintGenericMenu(MainMenu);
         }
 
         private static void PrintGenericMenu(Func<bool> menu)
