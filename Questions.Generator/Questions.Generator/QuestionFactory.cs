@@ -79,7 +79,7 @@ namespace Questions.Generator
                 Console.Write($"Вопрос: ");
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.Write($">>> {question.Item}? <<< ");
+                Console.Write($">>> {question.Item}? <<<");
                 Console.WriteLine($"\r");
                 Console.ResetColor();
                 Console.WriteLine($"\r");
