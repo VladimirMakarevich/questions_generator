@@ -299,12 +299,18 @@ namespace Questions.Generator
             DisplayResult(CaptureInput(question), question);
         }
 
-        public  static string CaptureInput(string question)
+        public static string CaptureInput(string question)
         {
-            Console.WriteLine($"\n");
             Console.Write($"Введите текст к которому хотите задать вопрос: {question} ");
+            
+            Console.BackgroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = ConsoleColor.Black;
+            
+            var text = Console.ReadLine();
+            
+            Console.ResetColor();
 
-            return Console.ReadLine();
+            return text;
         }
 
         public static void DisplayResult(string message, string question)
@@ -323,7 +329,10 @@ namespace Questions.Generator
                 }   
             }
 
+            Console.BackgroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = ConsoleColor.Black;
             Console.WriteLine($"\r\nВаш вопрос: {question} {message}{questionSymbol}".TrimEnd());
+            Console.ResetColor();
             Console.Write("\r\nНажмите Enter что бы вернуться в предыдущее меню.");
             Console.ReadLine();
             Console.WriteLine($"\r\n");
