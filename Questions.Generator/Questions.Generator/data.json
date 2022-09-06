@@ -1,33 +1,125 @@
 ﻿{
-  "key": null,
-  "title": null,
-  "menus": [
-    {
-      "key": null,
-      "title": null,
-      "menus": null,
-      "type": 1,
-      "items": [
-        {
-          "key": null,
-          "item": null
-        },
-        {
-          "key": null,
-          "item": null
-        }
-      ]
-    }
-  ],
-  "type": 1,
   "items": [
     {
-      "key": null,
-      "item": null
+      "key": "1",
+      "title": "По типам",
+      "type": 1,
+      "menus": [
+        {
+          "key": "1",
+          "title": "О причине",
+          "menus": null,
+          "type": 1,
+          "items": [
+            {
+              "key": "1",
+              "item": "Почему"
+            }
+          ]
+        },
+        {
+          "key": "2",
+          "title": "О цели",
+          "menus": null,
+          "type": 1,
+          "items": [
+            {
+              "key": "1",
+              "item": "Зачем"
+            },
+            {
+              "key": "2",
+              "item": "К чему"
+            }
+          ]
+        },
+        {
+          "key": "3",
+          "title": "О свойствах",
+          "menus": null,
+          "type": 1,
+          "items": [
+            {
+              "key": "1",
+              "item": "Какой"
+            },
+            {
+              "key": "2",
+              "item": "Какая"
+            },
+            {
+              "key": "3",
+              "item": "Какое"
+            }
+          ]
+        },
+        {
+          "key": "4",
+          "title": "О способе",
+          "menus": null,
+          "type": 1,
+          "items": [
+            {
+              "key": "1",
+              "item": "Как"
+            },
+            {
+              "key": "2",
+              "item": "Каким образом"
+            }
+          ]
+        },
+        {
+          "key": "5",
+          "title": "О сущости",
+          "menus": null,
+          "type": 1,
+          "items": [
+            {
+              "key": "1",
+              "item": "Что"
+            }
+          ]
+        }
+      ]
     },
     {
-      "key": null,
-      "item": null
+      "key": "2",
+      "title": "Случайный вопрос",
+      "menus": null,
+      "type": 2,
+      "items": [
+        {
+          "item": "Что"
+        },
+        {
+          "item": "Почему"
+        },
+        {
+          "item": "Зачем"
+        },
+        {
+          "item": "К чему"
+        },
+        {
+          "item": "Какой"
+        },
+        {
+          "item": "Какая"
+        },
+        {
+          "item": "Какое"
+        },
+        {
+          "item": "Как"
+        },
+        {
+          "item": "Каким Образом"
+        },
+        {
+          "item": "Что"
+        }
+      ]
     }
   ]
 }

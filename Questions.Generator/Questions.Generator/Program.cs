@@ -40,12 +40,9 @@ namespace Questions.Generator
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
 
-            // Creates and initializes the CultureInfo which uses the international sort.
-            Console.WriteLine("Привет, это генератор вопрос для системного мышления!\n");
-
             QuestionFactory.GenerateQuestions();
 
-            //PrintGenericMenu(MainMenu);
+            // PrintGenericMenu(MainMenu);
         }
 
         private static void PrintGenericMenu(Func<bool> menu)
@@ -128,7 +125,7 @@ namespace Questions.Generator
             Console.WriteLine($"Вопрос: {question}?");
             Console.WriteLine($"\r");
             Console.WriteLine("1) Выбрать этот вопрос.");
-            Console.WriteLine("2) Получить следующий вопрос.");
+            Console.WriteLine("ENTER) Получить следующий вопрос.");
             Console.WriteLine("0) Выход в главное меню.");
             Console.Write("\r\nВыбранный вариант: ");
 
@@ -302,7 +299,7 @@ namespace Questions.Generator
             DisplayResult(CaptureInput(question), question);
         }
 
-        private static string CaptureInput(string question)
+        public  static string CaptureInput(string question)
         {
             Console.WriteLine($"\n");
             Console.Write($"Введите текст к которому хотите задать вопрос: {question} ");
@@ -310,12 +307,51 @@ namespace Questions.Generator
             return Console.ReadLine();
         }
 
-        private static void DisplayResult(string message, string question)
+        public static void DisplayResult(string message, string question)
         {
-            Console.WriteLine($"\r\nВаш вопрос: {question} {message}?");
+            char questionSymbol = ' ';
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                var lastSymbol = message[^1];
+                if (!lastSymbol.Equals('?'))
+                {
+                    questionSymbol = '?';
+                }
+                else
+                {
+                    questionSymbol = ' ';
+                }   
+            }
+
+            Console.WriteLine($"\r\nВаш вопрос: {question} {message}{questionSymbol}".TrimEnd());
             Console.Write("\r\nНажмите Enter что бы вернуться в предыдущее меню.");
             Console.ReadLine();
             Console.WriteLine($"\r\n");
+        }
+        
+        //Returns null if ESC key pressed during input.
+        private static string ReadLineWithCancel()
+        {
+            string result = null;
+
+            var buffer = new StringBuilder();
+
+            //The key is read passing true for the intercept argument to prevent
+            //any characters from displaying when the Escape key is pressed.
+            ConsoleKeyInfo info = Console.ReadKey(true);
+            while (info.Key != ConsoleKey.Enter && info.Key != ConsoleKey.Escape)
+            {
+                Console.Write(info.KeyChar);
+                buffer.Append(info.KeyChar);
+                info = Console.ReadKey(true);
+            } 
+
+            if (info.Key == ConsoleKey.Enter)
+            {
+                result = buffer.ToString();
+            }
+
+            return result;
         }
     }
 }

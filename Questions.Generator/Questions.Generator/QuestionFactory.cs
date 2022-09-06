@@ -4,136 +4,31 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Questions.Generator.Models;
 
 namespace Questions.Generator
 {
-    public class QuestionFactory
+    public static class QuestionFactory
     {
-        private static List<MenuModel> MenuModels = new List<MenuModel>();
+        private static List<MenuModel> _menuModels = new List<MenuModel>();
 
         public static void GenerateQuestions()
         {
-            MenuModels = new List<MenuModel>()
-            {
-                new MenuModel()
-                {
-                    Key = "1",
-                    Title = "По типам",
-                    Type = MenuType.Classic,
-                    Menus = new List<MenuModel>()
-                    {
-                        new MenuModel()
-                        {
-                            Key = "1",
-                            Title = "О причине",
-                            Type = MenuType.Classic,
-                            Items = new List<MenuItemModel>()
-                            {
-                                new MenuItemModel()
-                                {
-                                    Key = "1",
-                                    Item = "Почему"
-                                }
-                            }
-                        },
-                        new MenuModel()
-                        {
-                            Key = "2",
-                            Title = "О цели",
-                            Type = MenuType.Classic,
-                            Items = new List<MenuItemModel>()
-                            {
-                                new MenuItemModel()
-                                {
-                                    Key = "1",
-                                    Item = "Зачем"
-                                },
-                                new MenuItemModel()
-                                {
-                                    Key = "2",
-                                    Item = "К чему"
-                                }
-                            }
-                        },
-                        new MenuModel()
-                        {
-                            Key = "3",
-                            Title = "О свойствах",
-                            Type = MenuType.Classic,
-                            Items = new List<MenuItemModel>()
-                            {
-                                new MenuItemModel()
-                                {
-                                    Key = "1",
-                                    Item = "Какой"
-                                },
-                                new MenuItemModel()
-                                {
-                                    Key = "2",
-                                    Item = "Какая"
-                                },
-                                new MenuItemModel()
-                                {
-                                    Key = "3",
-                                    Item = "Какое"
-                                }
-                            }
-                        },
-                        new MenuModel()
-                        {
-                            Key = "4",
-                            Title = "О способе",
-                            Type = MenuType.Classic,
-                            Items = new List<MenuItemModel>()
-                            {
-                                new MenuItemModel()
-                                {
-                                    Key = "1",
-                                    Item = "Как"
-                                },
-                                new MenuItemModel()
-                                {
-                                    Key = "2",
-                                    Item = "Каким образом"
-                                }
-                            }
-                        },
-                        new MenuModel()
-                        {
-                            Key = "5",
-                            Title = "О сущости",
-                            Type = MenuType.Classic,
-                            Items = new List<MenuItemModel>()
-                            {
-                                new MenuItemModel()
-                                {
-                                    Key = "1",
-                                    Item = "Что"
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            MenuModels = Read($"{AppDomain.CurrentDomain.BaseDirectory}data.json");
+            _menuModels = Read($"{AppDomain.CurrentDomain.BaseDirectory}data.json");
 
             PrintGenericMenu();
         }
 
-        public static List<MenuModel> Read(string path)
+        private static List<MenuModel> Read(string path)
         {
             using var file = new StreamReader(path);
             try
             {
                 string json = file.ReadToEnd();
 
-                var serializerSettings = new JsonSerializerSettings
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                };
-
-                return JsonConvert.DeserializeObject<List<MenuModel>>(json, serializerSettings);
+                var data = JsonConvert.DeserializeObject<DataModel>(json);
+                
+                return data?.Items ?? new List<MenuModel>();
             }
             catch (Exception ex)
             {
@@ -193,9 +88,46 @@ namespace Questions.Generator
             return true;
         }
 
+        private static bool GenerateRandomQuestion(MenuModel menu)
+        {
+            bool showMenu = true;
+            while (showMenu)
+            {
+                ClearConsole();
+                var question = GetNextQuestion(menu.Items.ToArray());
+                Console.WriteLine($"Вопрос: {question.Item}?");
+                Console.WriteLine($"\r");
+                Console.WriteLine("1) Выбрать этот вопрос.");
+                Console.WriteLine("ENTER) Получить следующий вопрос.");
+                Console.WriteLine("0) Выход в главное меню.");
+                Console.Write("\r\nВыбранный вариант: ");
+
+                switch (Console.ReadLine())
+                {
+                    case "1":
+                        Program.DisplayResult(Program.CaptureInput(question.Item), question.Item);
+                        break;
+                    case "0":
+                        showMenu = false;
+                        break;
+                }
+            }
+
+            return true;
+        }
+
+        private static MenuItemModel GetNextQuestion(MenuItemModel[] questions)
+        {
+            var random = new Random();
+            var index = random.Next(0, questions.Length);
+
+            return questions[index];
+        }
+
         private static bool PrintMenu(MenuModel menuModel = null)
         {
-            var currentMenus = new List<MenuModel>();
+            ClearConsole();
+            List<MenuModel> currentMenus;
             if (menuModel != null)
             {
                 currentMenus = menuModel.Menus;
@@ -207,7 +139,7 @@ namespace Questions.Generator
             }
             else
             {
-                currentMenus = MenuModels;
+                currentMenus = _menuModels;
             }
 
             Console.WriteLine("Выберите вариант:");
@@ -230,36 +162,24 @@ namespace Questions.Generator
                 return false;
             }
 
-            var result =
-                currentMenus.FirstOrDefault(x => x.Key.ToLowerInvariant().Equals(userOption.ToLowerInvariant()));
-            if (result == null)
+            var currentMenu = currentMenus.FirstOrDefault(x => x.Key.ToLowerInvariant().Equals(userOption.ToLowerInvariant()));
+            if (currentMenu == null)
             {
                 return true;
             }
 
-            PrintGenericMenu(result);
+            if (currentMenu.Type == MenuType.Random)
+            {
+                return GenerateRandomQuestion(currentMenu);
+            }
+
+            PrintGenericMenu(currentMenu);
             return true;
         }
-    }
-
-    public class MenuModel
-    {
-        public string Key { get; set; }
-        public string Title { get; set; }
-        public List<MenuModel> Menus { get; set; } = new List<MenuModel>();
-        public MenuType Type { get; set; } = MenuType.Classic;
-        public List<MenuItemModel> Items { get; set; }
-    }
-
-    public class MenuItemModel
-    {
-        public string Key { get; set; }
-        public string Item { get; set; }
-    }
-
-    public enum MenuType
-    {
-        Classic = 1,
-        Random = 2
+        
+        private static void ClearConsole()
+        {
+            Console.Clear();
+        }
     }
 }
