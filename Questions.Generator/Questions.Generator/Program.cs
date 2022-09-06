@@ -329,11 +329,13 @@ namespace Questions.Generator
                 }   
             }
 
-            Console.BackgroundColor = ConsoleColor.Cyan;
+            Console.Write($"\r\nВаш вопрос: ");
+            Console.BackgroundColor = ConsoleColor.Red;
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine($"\r\nВаш вопрос: {question} {message}{questionSymbol}".TrimEnd());
+            Console.Write($"{question} {message}{questionSymbol}".TrimEnd());
+            Console.WriteLine($"\r\n");
             Console.ResetColor();
-            Console.Write("\r\nНажмите Enter что бы вернуться в предыдущее меню.");
+            Console.Write("\r\nНажмите Enter что бы вернуться в предыдущий шаг.");
             Console.ReadLine();
             Console.WriteLine($"\r\n");
         }
