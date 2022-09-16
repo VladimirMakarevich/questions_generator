@@ -33,7 +33,7 @@ namespace Questions.Generator
         {
             PrintCurrentTitle(menuModel, menuTitle);
 
-            foreach (var item in menuModel.Items)
+            foreach (var item in menuModel.Items ?? new List<MenuItemModel>())
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"{item.Key}) {item.Item}?");
@@ -245,7 +245,7 @@ namespace Questions.Generator
                     sb.Append("  - ");
                 }
             }
-
+            
             foreach (var menuModel in menuModels)
             {
                 Console.WriteLine($"{sb}{menuModel.Title}");
@@ -254,10 +254,11 @@ namespace Questions.Generator
                     continue;
                 }
 
+                /*
                 PrintSideBar(menuModel.Menus, ++count);
+                count = default;
+                */
             }
-
-            count = default;
         }
 
         private static List<MenuModel> Read(string path)
