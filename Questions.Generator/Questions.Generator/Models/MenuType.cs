@@ -3,6 +3,7 @@
     public enum MenuType
     {
         Classic = 1,
-        Random = 2
+        Random = 2,
+        Helper = 3
     }
 }

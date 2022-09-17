@@ -19,7 +19,7 @@ namespace Questions.Generator
 
             PrintGenericMenu();
         }
-        
+
         private static void PrintGenericMenu(MenuModel menuModel = null, string menuTitle = null)
         {
             bool showMenu = true;
@@ -38,10 +38,16 @@ namespace Questions.Generator
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"{item.Key}) {item.Item}?");
                 Console.ResetColor();
+                if (!string.IsNullOrWhiteSpace(item.Description))
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"- {item.Description}");
+                    Console.ResetColor();
+                }
             }
 
             PrintBack();
-            
+
             Console.Write("\r\nВыбранный вопрос: ");
 
             var userOption = Console.ReadLine();
@@ -66,28 +72,99 @@ namespace Questions.Generator
             return true;
         }
 
-        private static bool GenerateRandomQuestion(MenuModel menu, string menuTitle = null)
+
+        private static bool GenerateHelperQuestion(MenuModel menu, string menuTitle = null)
         {
+            var items = new List<MenuItemModel>();
+            bool isInitRandom = true;
             bool showMenu = true;
             while (showMenu)
             {
                 ClearConsole();
-                
+
                 PrintCurrentTitle(menu, menuTitle);
 
-                var question = GetNextQuestion(menu.Items.ToArray());
+                var question = GetNextItem(menu.Items.ToArray(), isInitRandom, items);
+                if (question != null)
+                {
+                    Console.Write($"Вопрос: ");
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write($">>> {question.Item}? <<<");
+                    Console.WriteLine($"\r");
+                    Console.ResetColor();
+                    if (!string.IsNullOrWhiteSpace(question.Description))
+                    {
+                        Console.WriteLine($"\r");
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.WriteLine($"- {question.Description}");
+                        Console.ResetColor();
+                    }
+                }
+                else
+                {
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write($">>> Список пустой, нажмите '1' что бы начать сначало. <<<");
+                    Console.WriteLine($"\r");
+                    Console.ResetColor();
+                }
+
+                Console.WriteLine($"\r");
+                Console.WriteLine("1) Начать сначало.");
+                Console.WriteLine("ENTER) Получить следующий пункт.");
+
+                PrintBack();
+
+                Console.Write("\r\nВыбранный вариант: ");
+
+                switch (Console.ReadLine())
+                {
+                    case "1":
+                        items = new List<MenuItemModel>();
+                        isInitRandom = true;
+                        continue;
+                    case "0":
+                        showMenu = false;
+                        break;
+                }
+
+                isInitRandom = false;
+            }
+
+            return true;
+        }
+
+        private static bool GenerateRandomQuestion(MenuModel menu, string menuTitle = null)
+        {
+            bool isInitRandom = true;
+            bool showMenu = true;
+            while (showMenu)
+            {
+                ClearConsole();
+
+                PrintCurrentTitle(menu, menuTitle);
+
+                var question = GetNextRandomItem(menu.Items.ToArray(), isInitRandom);
                 Console.Write($"Вопрос: ");
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write($">>> {question.Item}? <<<");
                 Console.WriteLine($"\r");
                 Console.ResetColor();
+                if (!string.IsNullOrWhiteSpace(question.Description))
+                {
+                    Console.WriteLine($"\r");
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"- {question.Description}");
+                    Console.ResetColor();
+                }
                 Console.WriteLine($"\r");
                 Console.WriteLine("1) Выбрать этот вопрос.");
                 Console.WriteLine("ENTER) Получить следующий вопрос.");
-                
+
                 PrintBack();
-                
+
                 Console.Write("\r\nВыбранный вариант: ");
 
                 switch (Console.ReadLine())
@@ -99,6 +176,8 @@ namespace Questions.Generator
                         showMenu = false;
                         break;
                 }
+
+                isInitRandom = false;
             }
 
             return true;
@@ -153,9 +232,9 @@ namespace Questions.Generator
                 Console.WriteLine($"{menu.Key}) {menu.Title}.");
                 Console.ResetColor();
             }
-            
+
             PrintBack(menuTitle);
-            
+
             Console.Write("\r\nВыбранный вариант: ");
 
             var userOption = Console.ReadLine();
@@ -191,6 +270,11 @@ namespace Questions.Generator
                 return GenerateRandomQuestion(currentMenu, menuTitle);
             }
 
+            if (currentMenu.Type == MenuType.Helper)
+            {
+                return GenerateHelperQuestion(currentMenu, menuTitle);
+            }
+
             PrintGenericMenu(currentMenu, menuTitle);
             return true;
         }
@@ -205,8 +289,39 @@ namespace Questions.Generator
             Console.ResetColor();
         }
 
-        private static MenuItemModel GetNextQuestion(MenuItemModel[] questions)
+        private static MenuItemModel GetNextItem(MenuItemModel[] questions, bool isInitRandom, List<MenuItemModel> items)
         {
+            MenuItemModel nextItem = null;
+            if (isInitRandom || questions.Length == 1)
+            {
+                nextItem = questions[0];
+                items.Add(nextItem);
+
+                return nextItem;
+            }
+
+            var availableQuestions = questions.Where(x => items.All(c => c.Key != x.Key)).ToArray();
+            if (!availableQuestions.Any())
+            {
+                return null;
+            }
+
+            var random = new Random();
+            var index = random.Next(0, availableQuestions.Length);
+
+            nextItem = availableQuestions[index];
+            items.Add(nextItem);
+
+            return nextItem;
+        }
+
+        private static MenuItemModel GetNextRandomItem(MenuItemModel[] questions, bool isInitRandom)
+        {
+            if (isInitRandom)
+            {
+                return questions[0];
+            }
+
             var random = new Random();
             var index = random.Next(0, questions.Length);
 
@@ -245,7 +360,7 @@ namespace Questions.Generator
                     sb.Append("  - ");
                 }
             }
-            
+
             foreach (var menuModel in menuModels)
             {
                 Console.WriteLine($"{sb}{menuModel.Title}");
