@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Questions.Generator.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
-using Questions.Generator.Models;
 
 namespace Questions.Generator
 {
@@ -13,9 +13,14 @@ namespace Questions.Generator
         private static List<MenuModel> _menuModels = new List<MenuModel>();
         private static string _menuTitle = "Главное меню >> ";
 
-        public static void GenerateQuestions()
+        public static void GenerateQuestions(string filePath = null)
         {
-            _menuModels = Read($"{AppDomain.CurrentDomain.BaseDirectory}data.json");
+            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+            {
+                filePath = $"{AppDomain.CurrentDomain.BaseDirectory}data.json";
+            }
+
+            _menuModels = Read(filePath);
 
             PrintGenericMenu();
         }
@@ -378,19 +383,21 @@ namespace Questions.Generator
 
         private static List<MenuModel> Read(string path)
         {
-            using var file = new StreamReader(path);
-            try
+            using (var file = new StreamReader(path))
             {
-                string json = file.ReadToEnd();
+                try
+                {
+                    string json = file.ReadToEnd();
 
-                var data = JsonConvert.DeserializeObject<DataModel>(json);
+                    var data = JsonConvert.DeserializeObject<DataModel>(json);
 
-                return data?.Items ?? new List<MenuModel>();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Problem reading file: {ex}.");
-                return null;
+                    return data?.Items ?? new List<MenuModel>();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Problem reading file: {ex}.");
+                    return null;
+                }
             }
         }
     }

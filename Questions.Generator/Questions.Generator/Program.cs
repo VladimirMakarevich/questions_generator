@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Questions.Generator.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading;
 
@@ -27,7 +29,9 @@ namespace Questions.Generator
         {
             "Что я могу сделать лучше",
         }.ToArray();
-        
+
+        private static readonly string ConfigFileName = "appsettings.json";
+
         private static void Main(string[] args)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -40,7 +44,16 @@ namespace Questions.Generator
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
 
-            QuestionFactory.GenerateQuestions();
+            Settings settings = null;
+
+            var pathConfig = $"{Environment.CurrentDirectory}//{ConfigFileName}";
+            if (File.Exists(pathConfig))
+            {
+                var configRaw = File.ReadAllText(pathConfig);
+                settings = JsonConvert.DeserializeObject<Settings>(configRaw);
+            }
+
+            QuestionFactory.GenerateQuestions(settings?.DataPath);
 
             // PrintGenericMenu(MainMenu);
         }
@@ -302,12 +315,12 @@ namespace Questions.Generator
         public static string CaptureInput(string question)
         {
             Console.Write($"Введите текст к которому хотите задать вопрос: {question} ");
-            
+
             Console.BackgroundColor = ConsoleColor.Cyan;
             Console.ForegroundColor = ConsoleColor.Black;
-            
+
             var text = Console.ReadLine();
-            
+
             Console.ResetColor();
 
             return text;
@@ -326,7 +339,7 @@ namespace Questions.Generator
                 else
                 {
                     questionSymbol = ' ';
-                }   
+                }
             }
 
             Console.Write($"\r\nВаш вопрос: ");
@@ -339,7 +352,7 @@ namespace Questions.Generator
             Console.ReadLine();
             Console.WriteLine($"\r\n");
         }
-        
+
         //Returns null if ESC key pressed during input.
         private static string ReadLineWithCancel()
         {
@@ -355,7 +368,7 @@ namespace Questions.Generator
                 Console.Write(info.KeyChar);
                 buffer.Append(info.KeyChar);
                 info = Console.ReadKey(true);
-            } 
+            }
 
             if (info.Key == ConsoleKey.Enter)
             {
