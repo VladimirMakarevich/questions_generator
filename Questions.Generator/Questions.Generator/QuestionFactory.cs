@@ -154,7 +154,8 @@ namespace Questions.Generator
                 Console.Write($"Вопрос: ");
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.Write($">>> {question.Item}? <<<");
+                var questionSymbol = question.IsQuestion ? "?" : "";
+                Console.Write($">>> {question.Item}{questionSymbol} <<<");
                 Console.WriteLine($"\r");
                 Console.ResetColor();
                 if (!string.IsNullOrWhiteSpace(question.Description))
